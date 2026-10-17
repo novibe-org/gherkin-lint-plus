@@ -18,6 +18,13 @@ function getIgnorePatterns(ignoreArg: string[] | undefined): string | string[] {
   return defaultIgnoredFiles;
 }
 
+// glob matches a relative ignore pattern against the path relative to the cwd, so `**/x/**` misses
+// files reached by an absolute path outside it; the pattern's absolute twin catches those.
+function anchorAnyDepth(patterns: string | string[]): string[] {
+  const root = path.parse(process.cwd()).root.replace(/\\/g, '/');
+  return [patterns].flat().flatMap((p) => (p.startsWith('**/') ? [p, root + p] : [p]));
+}
+
 export function getFeatureFiles(args: string[], ignoreArg: string[] | undefined): string[] {
   const patterns = args.length > 0 ? args : ['.'];
   const files: string[] = [];
@@ -50,7 +57,7 @@ export function getFeatureFiles(args: string[], ignoreArg: string[] | undefined)
     }
 
     const matched = globSync(fixedPattern, {
-      ignore: getIgnorePatterns(ignoreArg),
+      ignore: anchorAnyDepth(getIgnorePatterns(ignoreArg)),
       nodir: true,
     });
     files.push(...matched);
