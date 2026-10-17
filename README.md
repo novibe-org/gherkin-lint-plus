@@ -578,8 +578,8 @@ Add **`@cucumber/messages`** (and optionally **`typescript`**) to your project f
 ## Release
 
 Pushing a tag `v<version>` that matches `version` in `package.json` publishes to npm from the
-[Publish](.github/workflows/publish.yml) workflow, with provenance. It authenticates with the
-`NPM_TOKEN` repository secret, an npm granular access token that can publish this package. Bump the version in a pull request, merge it, then tag `main`:
+[Publish](.github/workflows/publish.yml) workflow, through npm trusted publishing: no token, with
+provenance. Bump the version in a pull request, merge it, then tag `main`:
 
 ```bash
 git tag v1.1.0 && git push origin v1.1.0

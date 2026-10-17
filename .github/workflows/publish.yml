@@ -25,6 +25,4 @@ jobs:
           [ "$GITHUB_REF_NAME" = "v$version" ] || { echo "Tag $GITHUB_REF_NAME, package.json $version"; exit 1; }
       - run: npm ci
       - run: npm test
-      - run: npm publish --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: npm publish
