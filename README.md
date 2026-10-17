@@ -2,12 +2,14 @@
 
 A **Gherkin** linter for `.feature` files, implemented in **TypeScript** and built on [@cucumber/gherkin](https://www.npmjs.com/package/@cucumber/gherkin). It aims to be a modern, maintainable take on the same idea as the original [gherkin-lint](https://www.npmjs.com/package/gherkin-lint) CLI.
 
+**A fork.** This is [`krrish377/gherkin-lint-plus`](https://github.com/krrish377/gherkin-lint-plus) by Hari Krishna Chanumolu, now maintained by [novibe-org](https://github.com/novibe-org) and published as `@novibe-org/gherkin-lint-plus`. It adds three rules for what a Feature carries — [`required-feature-tags`](#required-feature-tags), [`no-dupe-feature-tags`](#no-dupe-feature-tags) and [`no-comments`](#no-comments) — offered upstream in [krrish377/gherkin-lint-plus#1](https://github.com/krrish377/gherkin-lint-plus/pull/1). The command is still `gherkin-lint-plus`, and an existing `.gherkin-lintrc` works unchanged.
+
 **Requirements:** Node.js `>=20`.
 
 ## Install
 
 ```bash
-npm install gherkin-lint-plus
+npm install -D @novibe-org/gherkin-lint-plus
 ```
 
 **From a git checkout (development):**
@@ -98,7 +100,9 @@ If there is no ignore file and you did not pass `-i`, **`node_modules/**`** is i
 | `name-length` | Optional | Yes | `"name-length": ["on", { … }]` |
 | `new-line-at-eof` | Optional | Yes | `"new-line-at-eof": ["on", "yes"]` |
 | `no-background-only-scenario` | Optional | Yes | `"no-background-only-scenario": "on"` |
+| `no-comments` | Optional | Yes | `"no-comments": "on"` |
 | `no-dupe-feature-names` | Optional | Yes | `"no-dupe-feature-names": "on"` |
+| `no-dupe-feature-tags` | Optional | Yes | `["on", { "tags": ["@id:.+"] }]` |
 | `no-dupe-scenario-names` | Optional | Yes | `"on"` or `["on", "in-feature"]` |
 | `no-duplicate-tags` | Optional | Yes | `"no-duplicate-tags": "on"` |
 | `no-empty-background` | Optional | Yes | `"no-empty-background": "on"` |
@@ -115,6 +119,7 @@ If there is no ignore file and you did not pass `-i`, **`node_modules/**`** is i
 | `one-space-between-tags` | Optional | Yes | `"one-space-between-tags": "on"` |
 | `only-one-when` | Optional | Yes | `"only-one-when": "on"` |
 | `required-tags` | Optional | Yes | `["on", { … }]` |
+| `required-feature-tags` | Optional | Yes | `["on", { "tags": ["@id:.+"] }]` |
 | `scenario-size` | Optional | Yes | `["on", { "steps-length": { … } }]` |
 | `use-and` | Optional | Yes | `"use-and": "on"` |
 
@@ -313,12 +318,28 @@ Turn on with `"rule-name": "on"` or `"off"` to disable. Use `["on", …]` when t
 { "no-background-only-scenario": "on" }
 ```
 
+#### `no-comments`
+
+**What:** No comment lines at all, so what a comment would say goes into the `Feature:` narrative or a tag, where readers and tools see it.
+
+```json
+{ "no-comments": "on" }
+```
+
 #### `no-dupe-feature-names`
 
 **What:** The same feature name must not appear in more than one linted file (cross-file state).
 
 ```json
 { "no-dupe-feature-names": "on" }
+```
+
+#### `no-dupe-feature-tags`
+
+**What:** No two Features in the linted files carry the same tag matching one of the regexes, for tags used as identity (cross-file state). **Options:** `tags` (regex strings).
+
+```json
+{ "no-dupe-feature-tags": ["on", { "tags": ["@id:.+"] }] }
 ```
 
 #### `no-dupe-scenario-names`
@@ -462,6 +483,14 @@ Turn on with `"rule-name": "on"` or `"off"` to disable. Use `["on", …]` when t
 { "only-one-when": "on" }
 ```
 
+#### `required-feature-tags`
+
+**What:** The Feature itself must carry a tag matching each regex. `required-tags` reads each scenario's own tags, so it cannot require a Feature-level tag. **Options:** `tags` (regex strings).
+
+```json
+{ "required-feature-tags": ["on", { "tags": ["@id:.+", "@source:.+"] }] }
+```
+
 #### `required-tags`
 
 **What:** Scenarios must match tag regexes. **Options:** `tags` (regex strings), `ignoreUntagged` (default `true` — untagged scenarios skipped).
@@ -552,4 +581,4 @@ Add **`@cucumber/messages`** (and optionally **`typescript`**) to your project f
 
 ## License
 
-ISC
+MIT — see [LICENSE](LICENSE).
